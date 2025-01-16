@@ -1,3 +1,4 @@
+
 // Header left right padding
 
 .header-area {
@@ -52,19 +53,6 @@
         @media #{$xs}{
             padding: 15px 20px;
          }
-         &.header-sticky.sticky-bar{
-            .header-right-btn{
-               @media #{$md}{
-                    display: none !important;
-               }
-               @media #{$sm}{
-                    display: none !important;
-               }
-               @media #{$xs}{
-                    display: none !important;
-               }
-            }
-        }
     }
 }
 
@@ -127,6 +115,9 @@
                             color:$theme-color;
                             background: none;
                             padding-left: 13px !important;
+                        }
+                        i{
+                            // @include transition(.4s);
                         }
                     }
                 } 

@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Code Runner</title>
+    <!-- CodeMirror CSS and JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt/dist/skulpt-stdlib.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/split.js/dist/split.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+        #container {
+            display: flex;
+            height: 100%; /* Full height */
+            width: 100%;
+        }
+        #editor-pane, #output-pane {
+            flex-grow: 1; /* Make panes fill available space */
+            padding: 10px;
+            overflow: auto; /* Allows scrolling if content overflows */
+            box-sizing: border-box;
+        }
+        #editor-pane {
+            background-color: #f0f0f0;
+        }
+        #output-pane {
+            background-color: #fff;
+        }
+        .gutter {
+            background-color: #ddd;
+            cursor: ew-resize;
+            height: 100%; /* Full height of container */
+            width: 10px; /* Width of the gutter */
+        }
+        #output {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Python Code Runner</h1>
+    <div id="container">
+        <div id="editor-pane">
+            <h3>Code Editor</h3>
+            <div id="editor"></div>
+            <button onclick="runCode()">Run Code</button> <!-- Button to run the code -->
+        </div>
+        <div id="output-pane">
+            <h3>Output</h3>
+            <div id="output">
+                <strong>Output:</strong>
+                <pre id="output-text"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Split.js
+        Split(['#editor-pane', '#output-pane'], {
+            sizes: [50, 50], // Initial sizes in percentages
+            gutterSize: 10, // Size of the draggable gutter
+            minSize: 20, // Minimum size of each panel
+        });
+
+        // CodeMirror Initialization
+        const editor = CodeMirror(document.getElementById("editor"), {
+            value: "# Write your Python code here\nprint('Hello, world!')",
+            mode: "python",
+            theme: "monokai",
+            lineNumbers: true,
+            indentUnit: 4,
+            tabSize: 4,
+            smartIndent: true,
+        });
+
+        // Python Execution with Skulpt
+        function runCode() {
+            const code = editor.getValue();
+            document.getElementById("output-text").textContent = ""; // Clear previous output
+
+            Sk.configure({
+                output: (text) => {
+                    document.getElementById("output-text").textContent += text; // Append output
+                },
+                read: (x) => {
+                    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) {
+                        throw `File not found: '${x}'`;
+                    }
+                    return Sk.builtinFiles["files"][x];
+                },
+            });
+
+            Sk.misceval
+                .asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, code))
+                .catch((err) => {
+                    document.getElementById("output-text").textContent = `Error: ${err.toString()}`; // Display error message
+                });
+        }
+    </script>
+</body>
+</html>
