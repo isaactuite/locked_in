@@ -4,12 +4,13 @@ function loadSplitJs(callback) {
     script.onload = callback; // Run the callback once the script is loaded
     document.head.appendChild(script);
 }
+
 loadSplitJs(() => {
     // Initialize Split.js after it's loaded
-    Split(['#left-pane', '#right-pane'], {
-        sizes: [50, 50],
-        minSize: 100,
-        gutterSize: 10,
-        cursor: 'col-resize'
+    Split(['#instruction-pane', '#editor-pane', '#output-pane'], {
+        sizes: [33, 34, 33],
+        gutterSize: 5,
+        minSize: 20,
+        onDrag: () => editor.refresh(),
     });
 });
