@@ -72,65 +72,112 @@
         </div>
         <!-- Header End -->
     </header>
-    <main>
-    <div id="container">
-        <div id="instruction-pane">
-            <h3>Lesson 1</h3>
-        </div>
-        <div id="editor-pane">
-            <h3>Write your code here:</h3>
-            
-            <div id="editor"></div>
-            <button onclick="runCode()">Run Code</button> <!-- Button to run the code -->
-        </div>   
-        <div id="output-pane">
-            <h3>Output:</h3>
-            <pre id="output-text"></pre>
-        </div>
-    </div>
-    </main>
-    <script>
-        // Initialize Split.js for three vertical panes
-        Split([ '#instruction-pane', '#editor-pane', '#output-pane',], {
-            sizes: [33, 33, 34], // Initial sizes in percentages
-            gutterSize: 10, // Size of the draggable gutter
-            minSize: 20, // Minimum size of each panel
-        });
 
-        // CodeMirror Initialization
+        <div id="container">
+            <div id="instruction-pane">
+                <h3>Lesson 1</h3>
+            </div>
+            <div id="editor-pane">
+                <div id="editor"></div>
+                <button id="run-code" onclick="runCode()">Run Code</button> <!-- Button to run the code -->
+            </div>   
+            <div id="output-pane">
+                <pre id="output-text"></pre>
+            </div>
+        </div>
+
+ <footer>
+    <div class="footer-container">
+        <nav><ul class="foot-nav">
+            <li><button id="previous-button" onClick="goToPreviousLesson()" disabled>Previous</button></li>
+            <li><button id="continue-btn" onclick="goToNextLesson()" disabled>Continue</button></li>
+        </ul></nav>
+    </div>
+</footer>  
+<script>
+        Split(['#instruction-pane', '#editor-pane', '#output-pane'], {
+            sizes: [33, 34, 33],
+            gutterSize: 5,
+            minSize: 20,
+            onDrag: () => editor.refresh(),
+        });
         const editor = CodeMirror(document.getElementById("editor"), {
             value: "# Write your Python code here\nprint('Hello, world!')",
             mode: "python",
             theme: "monokai",
             lineNumbers: true,
-            indentUnit: 4,
-            tabSize: 4,
-            smartIndent: true,
         });
-
-        // Python Execution with Skulpt
+        
+        editor.setSize("100%", "100%");
         function runCode() {
             const code = editor.getValue();
-            document.getElementById("output-text").textContent = ""; // Clear previous output
-
+            document.getElementById("output-text").textContent = "";
             Sk.configure({
                 output: (text) => {
-                    document.getElementById("output-text").textContent += text; // Append output
+                    document.getElementById("output-text").textContent += text;
                 },
                 read: (x) => {
-                    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) {
+                    if (Sk.builtinFiles === undefined || !Sk.builtinFiles["files"][x]) {
                         throw `File not found: '${x}'`;
                     }
                     return Sk.builtinFiles["files"][x];
                 },
             });
-
             Sk.misceval
                 .asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, code))
                 .catch((err) => {
-                    document.getElementById("output-text").textContent = `Error: ${err.toString()}`; // Display error message
+                    document.getElementById("output-text").textContent = `Error: ${err.toString()}`;
                 });
         }
+        let currentLesson = 1;  // Starting lesson number
+        let totalLessons = 5;   // Adjust according to the number of lessons
+        let isTaskCompleted = false; // Initially, task is not completed
+
+        // Enable/Disable the buttons based on lesson number and task completion
+        function updateButtonState() {
+            // Enable or disable "Previous" button based on the lesson
+            const previousBtn = document.getElementById('previous-btn');
+            if (currentLesson > 1) {
+                previousBtn.disabled = false;  // Enable if not the first lesson
+            } else {
+                previousBtn.disabled = true;   // Disable if it's the first lesson
+            }
+
+            // Enable or disable "Continue" button based on task completion
+            const continueBtn = document.getElementById('continue-btn');
+            if (isTaskCompleted) {
+                continueBtn.disabled = false;  // Enable if the task is completed
+            } else {
+                continueBtn.disabled = true;   // Disable if the task is not completed
+            }
+        }
+
+        // Call this function when the user completes the task
+        function markTaskAsCompleted() {
+            isTaskCompleted = true;
+            updateButtonState();  // Update button state
+        }
+
+        // Call this function to move to the next lesson
+        function goToNextLesson() {
+            if (currentLesson < totalLessons) {
+                currentLesson++;
+                updateButtonState();  // Update button state when moving to the next lesson
+            }
+            // Add code here to change content for the next lesson
+        }
+
+        // Call this function to go to the previous lesson
+        function goToPreviousLesson() {
+            if (currentLesson > 1) {
+                currentLesson--;
+                updateButtonState();  // Update button state when going to the previous lesson
+            }
+            // Add code here to change content for the previous lesson
+        }
+
+        // Initialize button state on page load
+        window.onload = updateButtonState;
     </script>
 </body>
 </html>
