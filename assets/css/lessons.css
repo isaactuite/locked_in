@@ -37,6 +37,20 @@ html{
     background-color: #1c1d18;
     color: white;
     font-size: 1.3em;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+
+}
+#output-div {
+    flex-grow: 1; /* Allow the top part to take most space */
+}
+
+#chat-window {
+    height: 200px; /* Set a fixed height for the bottom section */
+    background-color: #f4f4f4; /* Example background */
+    overflow-y: auto;
 }
 #instruction-pane {
     background-color: #dbdbd2;
@@ -45,7 +59,6 @@ html{
     background-color: #dddddd;
     cursor: ew-resize;
     height: 100%; /* Full height of container */
-    width:10px; /* Width of the gutter */
 }
 #editor{
     height: 100%;
@@ -219,4 +232,33 @@ nav {
     width: 40px;
     border-radius: 50%; /* Make the image round */
     object-fit: cover; /* Ensure the image maintains its aspect ratio */
+}
+#toggle-chat{
+    position: absolute;
+    right: 20px;
+    bottom: 300px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #d8a71f;
+    color: rgb(0, 0, 0);
+    border: black solid 1px;
+    border-radius: 4px;
+    z-index: 100000000000000000000; /* Ensure the button is on top of the editor */
+}
+
+#toggle-chat:hover {
+    background-color: #d8d000;
+}
+#toggle-chat:active{
+    
+    background-color: #d9f000;
+}
+.chat-hidden {
+    display: none;
+}
+.chat-visible {
+    display: block; /* Or any other display type as per your layout */
+    /* You can also animate the transition for smoother effect */
+    transition: all 0.3s ease-in-out;
 }

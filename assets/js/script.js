@@ -86,15 +86,7 @@ function runCode(editor) {
         });
 }
 
-// Function to initialize the Split.js layout
-function initializeSplit(editor) {
-    Split(['#instruction-pane', '#editor-pane', '#output-pane'], {
-        sizes: [33, 34, 33],
-        gutterSize: 5,
-        minSize: 20,
-        onDrag: () => editor.refresh(),
-    });
-}
+
 
 // Load the libraries and initialize everything
 loadCodeMirror(() => {
