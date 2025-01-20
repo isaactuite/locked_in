@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Code Runner</title>
 
-    <link rel="stylesheet" href="assets/css/lessons.css">
+    <link rel="stylesheet" href="../assets/css/lessons.css">
     
 </head>
 <body>
     <header>
         <div class="header-container">
             <div class="logo">
-                <a href="index.html"><img src="assets/img/logo/Locked-In-12-25-2024.png" alt="locked in logo" height="60px"></a>
+                <a href="index.html"><img src="../assets/img/logo/Locked-In-12-25-2024.png" alt="locked in logo" height="60px"></a>
             </div>
             <nav>
                 <ul id="lesson-navbar">
@@ -30,18 +30,35 @@
     </header>
 
         <div id="container">
+
             <div id="instruction-pane">
                 <h3>Lesson 1</h3>
             </div>
             <div id="editor-pane">
                 <div id="editor"></div>
-                <button id="run-code" onclick="runCode()">Run Code</button> <!-- Button to run the code -->
+                <button id="run-code">Run Code</button> <!-- Button to run the code -->
             </div>   
             <div id="output-pane">
                 <div id="output-div">
                     <pre id="output-text"></pre>
                 </div>
-                <div id="chat-window"></div>
+                <div id="chat-window">
+                    <div id="replies">
+
+                
+                        <div id="input-container">
+                            <input 
+                                id="chat-input" 
+                                type="text" 
+                                placeholder="Message AI Tutor" 
+                                aria-label="Chat input"
+                            />
+                            <div id="send-container">
+                            <button id="send-button"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -53,8 +70,8 @@
         </ul></nav>
     </div>
 </footer>  
-<script src="assets/js/split.js"></script>
-<script src="assets/js/script.js"></script>
+<script src="../assets/js/split.js"></script>
+<script src="../assets/js/script.js"></script>
 
 
 

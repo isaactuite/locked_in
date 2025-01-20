@@ -22,7 +22,7 @@ function initializeSplit(editor) {
     });
     Split(['#output-div', '#chat-window'], {
             direction: 'vertical', // This creates a **horizontal split** (top-bottom)
-            sizes: [50, 50], // Adjust the size distribution (50% each)
+            sizes: [40, 60], // Adjust the size distribution (50% each)
             gutterSize: 5,
             minSize: 200, // Minimum size for each section
         });

@@ -3,27 +3,30 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden;
+    overflow: hidden
 }
 html{
     margin: 0;
     padding: 0;
     height: 100%; /* Full viewport height */
-    overflow: hidden; /* Prevent page scrolling */
+     /* Prevent page scrolling */
     }
 #container {
     display: flex;
     flex-direction: row;
     height: 100%; /* Full height */
     width: 100%;
-    overflow: hidden;
+
+
+
+    top: 90px;
 }
 #editor-pane, #output-pane, #instruction-pane {
     display: flex;
     flex-grow: 1; /* Make panes fill available space */
     
     padding: 10px;
-    overflow-y: auto; /* Allows scrolling if content overflows */
+    overflow: auto; /* Allows scrolling if content overflows */
     
 }
 #editor-pane {
@@ -32,26 +35,28 @@ html{
     height: 100%;
     padding: 0px;
     position: relative;
+    margin-top: 90px;
 }
 #output-pane {
     background-color: #1c1d18;
+    position: relative;
+    margin-top: 90px;
+
     color: white;
     font-size: 1.3em;
     display: flex;
     flex-direction: column;
     height: 100%;
     overflow: hidden;
+    padding: 0px;
+
 
 }
 #output-div {
     flex-grow: 1; /* Allow the top part to take most space */
 }
 
-#chat-window {
-    height: 200px; /* Set a fixed height for the bottom section */
-    background-color: #f4f4f4; /* Example background */
-    overflow-y: auto;
-}
+
 #instruction-pane {
     background-color: #dbdbd2;
 }
@@ -69,8 +74,10 @@ html{
 }
 #run-code{
     position: absolute;
-    right: 20px;
+    right: 30px;
     bottom: 190px;
+    height:70px;
+    width: 120px;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
@@ -79,10 +86,32 @@ html{
     border: black solid 1px;
     border-radius: 4px;
     z-index: 5000; /* Ensure the button is on top of the editor */
+    
+    font-weight: 600;
 }
-
+#run-code .tooltip {
+    visibility: hidden;
+    width: 150px;
+    background-color: #bbbbbb;
+    color: #525252;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position above the button */
+    left: 50%;
+    margin-left: 75px;
+    transition: opacity 0.3; /* Offset to center the tooltip */
+    opacity: 0;
+}
 #run-code:hover {
     background-color: #d8d000;
+
+}
+#run-code:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
 }
 #run-code:active{
     
@@ -175,6 +204,10 @@ header {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    top: 0px;
+    position: absolute;
+    width: 100%;
+    z-index: 400;
     height: 90px;
 }
 
@@ -233,32 +266,85 @@ nav {
     border-radius: 50%; /* Make the image round */
     object-fit: cover; /* Ensure the image maintains its aspect ratio */
 }
-#toggle-chat{
-    position: absolute;
-    right: 20px;
-    bottom: 300px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #d8a71f;
-    color: rgb(0, 0, 0);
-    border: black solid 1px;
-    border-radius: 4px;
-    z-index: 100000000000000000000; /* Ensure the button is on top of the editor */
+#chat-window {
+    display: flex;
+    width: 100%;
+    height: 100%; /* Set a fixed height for the bottom section */
+    background-color: #2f2f2f;
+    flex-direction: column;
+    overflow-y: auto;
+    align-items: flex-end;
+    justify-content: center;
+
+}
+#replies{
+
+    background-color: #2f2f2f;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-grow: 1;
+}
+#input-container {
+    background-color: #424242;
+    width: 100%; /* Let the content determine the width */
+    max-width: 800px; /* Restrict the maximum width */
+    margin: 0 auto; /* Center horizontally */
+    border-radius: 15px;
+    height: 70px;
+    display: flex; /* Flexbox layout for input and button */
+    align-items: center; /* Center items vertically */
+    padding: 0 10px; /* Add some padding inside */
+    gap: 10px; /* Add space between input and button */
+    margin-top: auto; /* Push it to the bottom of the parent container */
+    margin-bottom: 170px;
+    z-index: 10;
 }
 
-#toggle-chat:hover {
-    background-color: #d8d000;
+#chat-input {
+    background-color: #333333;
+    flex-grow: 1; /* Allow input to take remaining space */
+    height: 50px; /* Set a consistent height */
+    border: none; /* Remove default border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 0 10px; /* Add padding inside the input */
+    font-size: 16px; /* Adjust font size */
+    outline: none; /* Remove focus outline */
+
 }
-#toggle-chat:active{
+#send-container{
+    height:  50px;
+    width: 50px;
+}
+
+#send-button{
+    background-image: url("../img/icons/up-arrow.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 50%; /* Match the input's rounded corners */
+    cursor: pointer;
+
     
-    background-color: #d9f000;
 }
-.chat-hidden {
-    display: none;
+
+#send-button:hover {
+    background-image: url("../img/icons/up-arrow-hover.png"); 
+
+    padding: 0 20px;
+    border: none;
+    border-radius: 50%; /* Match the input's rounded corners */
+    cursor: pointer;
 }
-.chat-visible {
-    display: block; /* Or any other display type as per your layout */
-    /* You can also animate the transition for smoother effect */
-    transition: all 0.3s ease-in-out;
+#send-button:active {
+    background-image: url("../img/icons/up-arrow-pressed.png"); 
+
+    padding: 0 20px;
+    border: none;
+    border-radius: 50%; /* Match the input's rounded corners */
+    cursor: pointer;
 }
+
