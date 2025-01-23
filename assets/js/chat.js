@@ -1,11 +1,7 @@
 
-// Load the environment variables from the .env file
-require('dotenv').config();
+
 
 // Access your API key from the environment variables
-const apiKey = process.env.API_KEY;
-
-
 const chatWindow = document.getElementById('chat-window');
 const chatInput = document.getElementById('chat-input');
 const sendButton = document.getElementById('send-ai');
