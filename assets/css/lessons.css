@@ -1,15 +1,16 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden
+    overflow: hidden;
+    background-color: #1c1d18;
 }
 html{
     margin: 0;
     padding: 0;
     height: 100%; /* Full viewport height */
-     /* Prevent page scrolling */
+    overflow: hidden; /* Prevent page scrolling */
     }
 #container {
     display: flex;
@@ -19,9 +20,10 @@ html{
 
 
 
+
     top: 90px;
 }
-#editor-pane, #output-pane, #instruction-pane {
+#editor-pane, #output-pane{
     display: flex;
     flex-grow: 1; /* Make panes fill available space */
     
@@ -29,13 +31,20 @@ html{
     overflow: auto; /* Allows scrolling if content overflows */
     
 }
-#editor-pane {
-    background-color: #f0f0f0;
-    flex-direction: column;
-    height: 100%;
-    padding: 0px;
-    position: relative;
+#instruction-pane{
+    background-color: #1c1d18;
+
     margin-top: 90px;
+    max-height: calc(100vh - 150px);
+}
+#editor-pane {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    position: relative; /* Set relative positioning for absolute children */
+    max-height: calc(100vh - 150px); /* Full viewport height */
+    margin-top: 90px; /* Allow space at the top */
+    padding: 0; /* Remove additional padding */
+    overflow: hidden; /* Prevent overflow issues */
 }
 #output-pane {
     background-color: #1c1d18;
@@ -49,17 +58,19 @@ html{
     height: 100%;
     overflow: hidden;
     padding: 0px;
-
+    max-height: calc(100vh - 150px);
 
 }
+#output-text{
+        background-color: #1c1d18;
+}
+
 #output-div {
     flex-grow: 1; /* Allow the top part to take most space */
 }
 
 
-#instruction-pane {
-    background-color: #dbdbd2;
-}
+
 .gutter {
     background-color: #dddddd;
     cursor: ew-resize;
@@ -69,57 +80,22 @@ html{
     height: 100%;
     width: 100%;
     flex-grow:1;
-    overflow: auto;
+    overflow: hidden;
     font-size: 1.3em;
+    font-family: "Courier New", monospace;
 }
-#run-code{
-    position: absolute;
-    right: 30px;
-    bottom: 190px;
-    height:70px;
-    width: 120px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #d8a71f;
-    color: rgb(0, 0, 0);
-    border: black solid 1px;
-    border-radius: 4px;
-    z-index: 5000; /* Ensure the button is on top of the editor */
-    
-    font-weight: 600;
+#editor-buttons {
+    display: flex;
+    width: 100%; /* Ensure it spans the full width */
+    height: 100px; /* Fixed height */
+    background-color: #1f1d20; /* Background color */
+    position: absolute; /* Position it relative to the editor-pane */
+    bottom: 0px; /* Stick to the bottom of the parent container */
+    z-index: 100; /* Sufficiently high to stay on top */
+    align-items: center; /* Center-align content vertically */
+    justify-content: space-around; /* Spread buttons evenly */
 }
-#run-code .tooltip {
-    visibility: hidden;
-    width: 150px;
-    background-color: #bbbbbb;
-    color: #525252;
-    text-align: center;
-    border-radius: 5px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%; /* Position above the button */
-    left: 50%;
-    margin-left: 75px;
-    transition: opacity 0.3; /* Offset to center the tooltip */
-    opacity: 0;
-}
-#run-code:hover {
-    background-color: #d8d000;
 
-}
-#run-code:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
-}
-#run-code:active{
-    
-    background-color: #d9f000;
-}
-h1 {
-    text-align: center;
-}
 
 
 
@@ -274,77 +250,147 @@ nav {
     flex-direction: column;
     overflow-y: auto;
     align-items: flex-end;
-    justify-content: center;
-
+    padding: 10px;
 }
-#replies{
+#messages{
 
     background-color: #2f2f2f;
-    width: 100%;
-    height: 100%;
+    width: 90%;
+    max-width: 1000px;
+    
     display: flex;
     flex-grow: 1;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+    overflow-y: auto;
+    box-sizing: border-box;
+    align-self:center;
 }
 #input-container {
-    background-color: #424242;
-    width: 100%; /* Let the content determine the width */
-    max-width: 800px; /* Restrict the maximum width */
-    margin: 0 auto; /* Center horizontally */
-    border-radius: 15px;
-    height: 70px;
-    display: flex; /* Flexbox layout for input and button */
-    align-items: center; /* Center items vertically */
-    padding: 0 10px; /* Add some padding inside */
-    gap: 10px; /* Add space between input and button */
-    margin-top: auto; /* Push it to the bottom of the parent container */
-    margin-bottom: 170px;
+    background-color: #3d3d3d;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 30px;
+    display: flex; /* Allow vertical growth */
+    align-items: center;
+    padding: 10px; /* Add padding inside */
+    gap: 10px;
+    margin-top: auto;
     z-index: 10;
+    position: sticky; /* Ensure it remains fixed at the bottom */
+    transform: translateY(0); /* Neutral position */
 }
 
 #chat-input {
-    background-color: #333333;
-    flex-grow: 1; /* Allow input to take remaining space */
-    height: 50px; /* Set a consistent height */
-    border: none; /* Remove default border */
-    border-radius: 10px; /* Rounded corners */
-    padding: 0 10px; /* Add padding inside the input */
-    font-size: 16px; /* Adjust font size */
-    outline: none; /* Remove focus outline */
-
-}
-#send-container{
-    height:  50px;
-    width: 50px;
-}
-
-#send-button{
-    background-image: url("../img/icons/up-arrow.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 100%;
-    height: 100%;
+    background-color: #3d3d3d;
+    flex-grow: 1;
+    width: 100%; /* Full width of container */
     border: none;
-    border-radius: 50%; /* Match the input's rounded corners */
-    cursor: pointer;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 20px;
+    outline: none;
+    color: white;
+    resize: none;
+    overflow: hidden;
+    box-sizing: border-box; /* Ensure padding doesn't affect dimensions */
+    font-family: 'Inter', sans-serif;
+}
 
+
+#input-container.fixed-bottom {
+    position: absolute; /* Stay at the bottom when growing */
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+
+.message {
+    padding: 10px;
+    margin: 5px;
+    max-width: 800px;
+    word-wrap: break-word;
+    display: flex;
     
+
 }
 
-#send-button:hover {
-    background-image: url("../img/icons/up-arrow-hover.png"); 
+.user-message {
+    margin-top:30px;
+    align-self: flex-end;
+    background-color: #5a5a5a; /* User's messages color */
+    color: white;
 
-    padding: 0 20px;
-    border: none;
-    border-radius: 50%; /* Match the input's rounded corners */
-    cursor: pointer;
-}
-#send-button:active {
-    background-image: url("../img/icons/up-arrow-pressed.png"); 
-
-    padding: 0 20px;
-    border: none;
-    border-radius: 50%; /* Match the input's rounded corners */
-    cursor: pointer;
+    border-radius: 20px 7px 20px 20px;
 }
 
+.ai-message {
+    margin-top:30px;
+    align-self:center;
+    background-color: #2f2f2f; /* AI's messages color */
+    color: white;
+    min-width: 600px;
+    display: flex;
+    flex-direction: column;
+}
+pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: "Courier New", monospace;
+}
+
+code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    display: block;
+    background-color: black;
+}
+
+.keyword {
+    color: #006ec9;
+    font-weight: bold;
+}
+
+.string {
+    color: rgb(17, 153, 78);
+}
+
+.number {
+    color: #991e57;
+}
+
+.comment {
+    color: #747474;
+    font-style: italic;
+}
+.functions{
+    color: #13c932;
+}
+#chat-window code {
+    background-color: rgb(26, 26, 26);
+    color: #e6e6e6; /* Light gray text for readability */
+    padding: 2px 4px;
+    border-radius: 10px;
+}
+
+/* For code blocks */
+#chat-window pre {
+    background-color: rgb(26, 26, 26) !important;
+    color: #e6e6e6;
+    padding: 15px;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+/* For syntax highlighted code blocks */
+pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+}

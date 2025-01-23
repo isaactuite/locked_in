@@ -15,16 +15,17 @@ loadSplitJs(() => {
 // Function to initialize the Split.js layout
 function initializeSplit(editor) {
     Split(['#instruction-pane', '#editor-pane', '#output-pane'], {
-        sizes: [33, 34, 33],
+        sizes: [26, 37, 37],
         gutterSize: 5,
-        minSize: 20,
+        minSize: 200,
         onDrag: () => editor.refresh(),
     });
     Split(['#output-div', '#chat-window'], {
             direction: 'vertical', // This creates a **horizontal split** (top-bottom)
             sizes: [40, 60], // Adjust the size distribution (50% each)
             gutterSize: 5,
-            minSize: 200, // Minimum size for each section
+            minSize: 300, // Minimum size for each section
         });
 }
 
+initializeSplit(editor);

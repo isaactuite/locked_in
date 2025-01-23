@@ -1,0 +1,195 @@
+#instruction-pane {
+    display: flex;
+    flex-grow: 1; /* Make panes fill available space */
+    
+    padding: 20px;
+    overflow: auto; /* Allows scrolling if content overflows */
+    font-size: 1.2rem;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+    word-spacing: 1.2px;
+    margin-top: 90px;
+    flex-direction: column;
+    color: #dadada;
+}
+
+#text-content{
+    background-color: #1c1d18;
+   max-width: 28vw;
+   padding: 30px;
+    border-bottom: 2px solid #cacaca
+}
+#tasks{
+    max-width: 28vw;
+    padding: 30px;
+    padding-top: 10px;
+    background-color: #1c1d18;
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+}
+.task-description{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+.neon-checkbox{
+    display: inline-flex;
+    position: relative;
+    height: 1.6rem;
+    width: 1.6rem;
+    vertical-align: middle;
+    
+
+}
+.task-text{
+    font-size:1.3rem;
+    font-weight: 500;
+    margin-left: 15px;
+    padding-bottom: 20px;
+    line-height: 1.6rem;
+    color: #dadada;
+    display: inline-block;
+    padding: 0;
+
+}
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 15px;
+    color: #f5f5f5; /* Lighter text for headings */
+    font-family: 'Helvetica', sans-serif;
+}
+
+h1 {
+    font-size: 2.5rem;
+    border-bottom: 2px solid #444; /* Subtle border for headings */
+    padding-bottom: 10px;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-top: 20px;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+h4, h5, h6 {
+    font-size: 1.2rem;
+}
+
+/* Paragraphs */
+p {
+    font-size: 1.2rem;
+    color: #d4d4d4; /* Slightly lighter text for paragraphs */
+}
+
+/* Lists */
+.text-list {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    list-style-type: none;
+}
+
+.text-list li {
+    position: relative;
+    padding-left: 20px;
+
+}
+.text-list li::before {
+    content: '•'; /* Add a custom bullet */
+    position: absolute;
+    left: 0;
+    color: #cacaca; /* Set bullet color */
+    font-size: 20px; /* Adjust bullet size */
+}
+/* Links */
+a {
+    color: #0099ff; /* Blue links for contrast */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #66ccff; /* Lighter blue on hover */
+}
+
+/* Code block styles */
+code {
+    background-color: #333; /* Dark background for inline code */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    color: #f5f5f5; /* Light text for inline code */
+}
+
+/* Preformatted text */
+pre {
+    background-color: #282c34; /* Darker background for code blocks */
+    color: #f4f4f4; /* Light text in code blocks */
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 5px solid #444; /* Subtle border for blockquotes */
+    padding-left: 15px;
+    font-style: italic;
+    margin-bottom: 20px;
+    color: #aaa; /* Slightly lighter text for blockquotes */
+}
+
+/* Text alignment */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+/* Text color variations */
+.text-primary {
+    color: #0099ff; /* Primary color for text */
+}
+
+.text-secondary {
+    color: #bbb; /* Secondary text color */
+}
+
+.text-success {
+    color: #28a745; /* Green text for success */
+}
+
+.text-danger {
+    color: #dc3545; /* Red text for danger */
+}
+
+/* Spacing utilities */
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.pt-10 {
+    padding-top: 10px;
+}
+
+.pb-10 {
+    padding-bottom: 10px;
+}

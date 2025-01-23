@@ -35,8 +35,17 @@ function loadSkulpt(callback) {
     document.head.appendChild(script1);
 }
 
+// Task definitions
+const tasks = [
+    { id: 'l1t1', description: 'Run the code to print Hello World', check: 'output', type: 'string', expectedOutput: 'Hello, world!'},
+    { id: 'l1t2', description: 'Save value in variable "balls"', check: 'variable', type: 'int', variableName:'balls', expectedValue:42},
+];
+
+let currentTaskIndex = 0; // Tracks the current task
+
+
 // Function to initialize the CodeMirror editor
-function initializeEditor() {
+function initializeEditor(defaultCode) {
     const editor = CodeMirror(document.getElementById('editor'), {
         mode: 'python',
         theme: 'monokai',
@@ -47,19 +56,80 @@ function initializeEditor() {
 
     // Set editor size to 100% of its container
     editor.setSize("100%", "100%");
+    editor.setValue(defaultCode);
     return editor;
 }
 
-// Function to run Python code using Skulpt
-function runCode(editor) {
-    const code = editor.getValue();
-    const outputText = document.getElementById("output-text");
-    outputText.textContent = ""; // Clear previous output
 
-    // Configure Skulpt to capture output
+const lessonsCode = {
+    lesson1: 
+`# Lesson 1: Introduction to Python
+def greet():
+    print("Hello, world!")
+
+greet()`,
+    
+    lesson2: 
+`# Lesson 2: Variables and Data Types
+def add_numbers(a, b):
+    return a + b
+
+print(add_numbers(5, 3))`,
+
+    // Add more lessons here
+    lesson3: 
+`# Lesson 3: Control Flow
+def check_even_odd(num):
+    if num % 2 == 0:
+        return "Even"
+    else:
+        return "Odd"
+
+print(check_even_odd(7))`
+};
+
+
+// Example usage: Load lesson 1 when the page is loaded
+window.onload = () => {
+    loadCodeMirror(() => {
+        loadSkulpt(() => {
+            console.log('Both CodeMirror and Skulpt have been loaded');
+            const thisLessonKey = document.getElementById(`header-container`);
+
+            // Initialize the editor for Lesson 1
+            initializeLesson(thisLessonKey);
+        });
+    });
+};
+
+
+
+
+
+
+
+
+// Utility function to normalize and compare strings
+function normalizeAndCompare(userOutput, expectedOutput) {
+    const normalize = (str) =>
+        str
+            .trim() // Remove leading and trailing spaces
+            .replace(/\s+/g, ' ') // Collapse multiple spaces into one
+            .toLowerCase(); // Convert to lowercase
+
+    return normalize(userOutput) === normalize(expectedOutput);
+}
+
+function runCode(editor) {
+    const userCode = editor.getValue();
+    const outputText = document.getElementById("output-text");
+    const task = tasks[currentTaskIndex];
+    outputText.textContent = "";
+
+    // Configure Skulpt output
     Sk.configure({
         output: (text) => {
-            outputText.textContent += text; // Append output to the output pane
+            outputText.textContent += text;
         },
         read: (x) => {
             if (Sk.builtinFiles === undefined || !Sk.builtinFiles["files"][x]) {
@@ -69,32 +139,83 @@ function runCode(editor) {
         },
     });
 
-    // Run the code asynchronously and check the output
+    // Modified wrapper that preserves code indentation
+    const wrappedCode = `import sys
+__original_stdout = sys.stdout
+__result__ = None
+try:
+${userCode.split('\n').map(line => '    ' + line).join('\n')}
+    __result__ = globals()
+except Exception as e:
+    __result__ = {"__error__": str(e)}`;
+
+    // Run the code asynchronously
     Sk.misceval
-        .asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, code))
-        .then(() => {
-            const userOutput = outputText.textContent.trim();
-            const expectedOutput = "Hello, world!"; // Expected output for this lesson
-            if (userOutput === expectedOutput) {
-                outputText.textContent += "\n✅ Correct! Great job!";
+        .asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, wrappedCode))
+        .then((module) => {
+            const result = Sk.ffi.remapToJs(module.$d.__result__);
+            if (result.__error__) {
+                outputText.textContent = `Error: ${result.__error__}`;
             } else {
-                outputText.textContent += `\n❌ Incorrect. Expected: "${expectedOutput}"`;
+                if (task.check === "output") {
+                    const userOutput = outputText.textContent.trim();
+                    if (normalizeAndCompare(userOutput, task.expectedOutput)) {
+                        outputText.textContent += "\n✅ Correct! Great job!";
+                        markTaskComplete(task.id);
+                    } else {
+                        outputText.textContent += `\n❌ Incorrect. Expected: "${task.expectedOutput}"`;
+                    }
+                } else if (task.check === "variable") {
+                    const variableValue = result[task.variableName];
+                    if (String(variableValue) === String(task.expectedValue)) {
+                        outputText.textContent += `\n✅ Correct! Variable "${task.variableName}" has the expected value: ${variableValue}`;
+                        markTaskComplete(task.id);
+                    } else {
+                        outputText.textContent += `\n❌ Incorrect value for variable "${task.variableName}". Expected: ${task.expectedValue}, but got: ${variableValue}`;
+                    }
+                }
             }
         })
         .catch((err) => {
             outputText.textContent = `Error: ${err.toString()}`;
         });
 }
+// Helper function to mark a task as complete
+function markTaskComplete(taskId) {
+    const taskCheckbox = document.getElementById(`${taskId}-checkbox`);
+    if (taskCheckbox) {
+        taskCheckbox.checked = true;
 
+        // Optionally play a sound
+        const dingSound = new Audio('C:/Users/isaac/GitHub/locked_in/assets/audio/ding1.mp3');
+        dingSound.play();
+    }
 
+    // Move to the next task if possible
+    currentTaskIndex++;
+    if (currentTaskIndex === tasks.length) {
+        const outputText = document.getElementById("output-text");
+        outputText.textContent += `\n🎉 All tasks completed! Move on to the next lesson.`;
+    }
+}
+
+let editor;
 
 // Load the libraries and initialize everything
 loadCodeMirror(() => {
     loadSkulpt(() => {
         console.log('Both CodeMirror and Skulpt have been loaded');
         
-        // Initialize the editor and set up the code execution
-        const editor = initializeEditor();
+        // Get the lesson ID from the meta tag and initialize the editor
+        const lessonId = document.querySelector('meta[name="lesson-id"]').getAttribute('content');
+
+        // Ensure the lesson ID exists in lessonsCode
+        if (lessonsCode[lessonId]) {
+            const defaultCode = lessonsCode[lessonId]; // Initialize the correct lesson code
+            editor = initializeEditor(defaultCode);
+        } else {
+            console.error(`Lesson ID ${lessonId} not found.`);
+        }
 
         // Initialize Split.js layout for the page
         initializeSplit(editor);
@@ -112,3 +233,4 @@ loadCodeMirror(() => {
         });
     });
 });
+
